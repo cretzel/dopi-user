@@ -1,0 +1,52 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: dopi-user
+  labels:
+    app: dopi-user
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dopi-user
+  template:
+    metadata:
+      labels:
+        app: dopi-user
+    spec:
+      containers:
+      - name: dopi-user
+        image: cretzel/dopi-user:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+        env:
+          - name: ADMIN_PASSWORD
+            value: admin
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: dopi-user
+spec:
+  selector:
+    app: dopi-user
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: dopi-user-ingress
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /api/user
+            backend:
+              serviceName: dopi-user
+              servicePort: 80
+
+
