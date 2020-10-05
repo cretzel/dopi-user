@@ -3,11 +3,19 @@ package router
 import (
 	"encoding/json"
 	"net/http"
+	"time"
 )
 
 type UserResponse struct {
 	Id       string `json:"id,omitempty"`
 	Username string `json:"username,omitempty"`
+}
+
+type UserInfoResponse struct {
+	Username  string    `json:"username"`
+	Roles     []string  `json:"roles"`
+	ExpiresAt time.Time `json:"expiresAt"`
+	IssuedAt  time.Time `json:"issuedAt"`
 }
 
 type LoginRequest struct {
