@@ -17,7 +17,6 @@ func Generate(s string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-
 	hash := string(hashedBytes[:])
 	return hash + deliminator + salt, nil
 }

@@ -21,7 +21,7 @@ func CreateJwt(user *model.User) (string, *jwt.Token, *DopiClaims, error) {
 
 	var claims = DopiClaims{
 		user.Username,
-		[]string{},
+		user.Roles,
 		jwt.StandardClaims{
 			Issuer:    "dopi",
 			ExpiresAt: time.Now().Add(time.Minute * 1).Unix(),

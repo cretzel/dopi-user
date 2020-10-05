@@ -2,6 +2,7 @@ package model
 
 type User struct {
 	Username string
+	Roles    []string
 	Password string
 }
 

@@ -29,7 +29,11 @@ func (u *UserService) CreateAdminUser() {
 		if err != nil {
 			panic("Could not crypt password")
 		}
-		admin = &model.User{Username: "admin", Password: passwordCrypted}
+		admin = &model.User{
+			Username: "admin",
+			Password: passwordCrypted,
+			Roles:    []string{"admin"},
+		}
 		u.CreateUser(admin)
 	}
 	log.Println("admin user: ", admin.Username)

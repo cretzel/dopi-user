@@ -112,7 +112,7 @@ func (ur *UserRouter) GetUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response := UserResponse{Username: user.Username}
+	response := toUserResponse(user)
 	json.NewEncoder(w).Encode(response)
 }
 
@@ -129,7 +129,7 @@ func (ur *UserRouter) GetMe(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response := UserResponse{Username: user.Username}
+	response := toUserResponse(user)
 	json.NewEncoder(w).Encode(response)
 }
 
