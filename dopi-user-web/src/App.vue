@@ -14,7 +14,9 @@
           <div class="container">
           <div v-if="store.loggedIn" class="row">
             <div class="col-sm-12">
-              <UserPage></UserPage>
+
+              <UserListPage></UserListPage>
+
             </div>
           </div>
           <div v-else class="row">
@@ -32,14 +34,14 @@
 </template>
 
 <script>
-import UserPage from './components/UserPage.vue'
+import UserListPage from './components/UserListPage.vue'
 import store from './store/Store.js'
 import loginService from './service/LoginService.js'
 
 export default {
   name: 'App',
   components: {
-    UserPage
+    UserListPage
   },
   data: function () {
     return {
