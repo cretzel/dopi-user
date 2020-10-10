@@ -1,0 +1,29 @@
+.error {
+  color: #f95b4b;
+}
+
+html, * {
+  font-family: Avenir,Helvetica,Arial,sans-serif;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,h2,h3,h4,h5,h6,.logo {
+  font-weight: 300;
+}
+
+header {
+  margin-bottom: 20px;
+}
+
+header .username {
+  padding: calc(2 * var(--universal-padding)) calc(2 * var(--universal-padding));
+}
+
+button.primary {
+  --button-back-color: #199ec0;
+}
+
+button.primary {
+  --button-hover-back-color: #1b83a7 !important;
+}

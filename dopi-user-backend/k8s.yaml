@@ -1,22 +1,22 @@
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-  name: dopi-user
+  name: dopi-user-backend
   labels:
-    app: dopi-user
+    app: dopi-user-backend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: dopi-user
+      app: dopi-user-backend
   template:
     metadata:
       labels:
-        app: dopi-user
+        app: dopi-user-backend
     spec:
       containers:
-      - name: dopi-user
-        image: cretzel/dopi-user:latest
+      - name: dopi-user-backend
+        image: cretzel/dopi-user-backend:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
@@ -27,10 +27,10 @@ spec:
 kind: Service
 apiVersion: v1
 metadata:
-  name: dopi-user
+  name: dopi-user-backend
 spec:
   selector:
-    app: dopi-user
+    app: dopi-user-backend
   ports:
   - protocol: TCP
     port: 80
@@ -39,14 +39,14 @@ spec:
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: dopi-user-ingress
+  name: dopi-user-backend-ingress
 spec:
   rules:
     - http:
         paths:
           - path: /api/user
             backend:
-              serviceName: dopi-user
+              serviceName: dopi-user-backend
               servicePort: 80
 
 

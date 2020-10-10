@@ -54,6 +54,12 @@ func (u *UserService) GetUserByUsername(username string) (*model.User, error) {
 	return &user, err
 }
 
+func (u *UserService) GetUsers() ([]model.User, error) {
+	users := []model.User{}
+	err := u.collection.Find(bson.M{}).All(&users)
+	return users, err
+}
+
 func (u *UserService) Login(username string, password string) (*model.User, error) {
 	user, err := u.GetUserByUsername(username)
 	if err != nil {

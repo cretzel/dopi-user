@@ -27,6 +27,7 @@ func NewUserRouter(userService model.UserService) *UserRouter {
 	muxRouter.HandleFunc("/api/user/logout", userRouter.PostLogout).Methods("POST")
 	muxRouter.HandleFunc("/api/user/users/me", userRouter.GetMe).Methods("GET")
 	muxRouter.HandleFunc("/api/user/users/{username}", userRouter.GetUser).Methods("GET")
+	muxRouter.HandleFunc("/api/user/users", userRouter.GetUsers).Methods("GET")
 
 	return &userRouter
 }
@@ -113,6 +114,23 @@ func (ur *UserRouter) GetUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response := toUserResponse(user)
+	json.NewEncoder(w).Encode(response)
+}
+
+func (ur *UserRouter) GetUsers(w http.ResponseWriter, r *http.Request) {
+	_, err := ur.checkAuth(r)
+	if err != nil {
+		Error(w, 401, "Not authenticated")
+		return
+	}
+
+	users, err := ur.userService.GetUsers()
+	if err != nil {
+		Error(w, 404, "Not Found")
+		return
+	}
+
+	response := toUsersResponse(users)
 	json.NewEncoder(w).Encode(response)
 }
 

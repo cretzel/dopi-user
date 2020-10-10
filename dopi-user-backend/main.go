@@ -14,6 +14,9 @@ func main() {
 	godotenv.Load(".env.local")
 	godotenv.Load()
 
+	secret := os.Getenv("JWT_SECRET")
+	log.Println("Secret", secret)
+
 	session, err := service.NewSession()
 	if err != nil {
 		log.Fatalln("unable to connect to mongodb")

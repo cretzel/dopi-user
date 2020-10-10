@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -19,18 +20,21 @@ type DopiClaims struct {
 func CreateJwt(user *model.User) (string, *jwt.Token, *DopiClaims, error) {
 	var err error
 
+	secret := os.Getenv("JWT_SECRET")
+	validityMinutes, _ := strconv.Atoi(os.Getenv("JWT_TOKEN_VALIDITY"))
+
 	var claims = DopiClaims{
 		user.Username,
 		user.Roles,
 		jwt.StandardClaims{
 			Issuer:    "dopi",
-			ExpiresAt: time.Now().Add(time.Minute * 1).Unix(),
+			ExpiresAt: time.Now().Add(time.Minute * time.Duration(validityMinutes)).Unix(),
 			IssuedAt:  time.Now().Unix(),
 		},
 	}
 
 	at := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	token, err := at.SignedString([]byte(os.Getenv("JWT_SECRET")))
+	token, err := at.SignedString([]byte(secret))
 	if err != nil {
 		return "", nil, nil, err
 	}

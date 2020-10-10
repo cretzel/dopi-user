@@ -32,6 +32,14 @@ func toUserResponse(user *model.User) *UserResponse {
 	}
 }
 
+func toUsersResponse(users []model.User) []UserResponse {
+	userArray := make([]UserResponse, len(users))
+	for i, u := range users {
+		userArray[i] = *toUserResponse(&u)
+	}
+	return userArray
+}
+
 func Error(w http.ResponseWriter, code int, message string) {
 	body, _ := json.Marshal(map[string]string{"error": message})
 	w.WriteHeader(code)
