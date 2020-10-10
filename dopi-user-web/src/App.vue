@@ -1,22 +1,27 @@
 <template>
   <div id="app">
     <header class="row">
-      <span class="logo col-sm-1">Dopi</span>
-      <span class="col-sm-8"></span>
-      <span class="col-sm-2 username" v-if="store.loggedIn">{{ store.userInfo.username }}</span>
+      <a href="/" class="logo col-sm col-md">Dopi</a>
+      <label for="doc-drawer-checkbox" class="button drawer-toggle col-sm-last"></label>
+      <a class="doc username col-sm-1 col-md-last" v-if="store.loggedIn">{{ store.userInfo.username }}</a>
     </header>
 
-    <div class="row" id="doc-wrapper">
 
-      <main class="col-sm-12 col-md-12 col-lg-12" id="doc-content">
+    <div class="row" id="doc-wrapper">
+      <input id="doc-drawer-checkbox" class="drawer" value="on" type="checkbox">
+      <nav class="col-md-4 col-lg-3" id="nav-drawer">
+        <h4>Dopi User Management</h4>
+        <label for="doc-drawer-checkbox" class="button drawer-close"></label>
+        <router-link to="/">Users</router-link>
+      </nav>
+
+      <main class="col-sm-12 col-md-8 col-lg-9" id="doc-content">
         <div class="fluid">
 
           <div class="container">
           <div v-if="store.loggedIn" class="row">
             <div class="col-sm-12">
-
-              <UserListPage></UserListPage>
-
+              <router-view/>
             </div>
           </div>
           <div v-else class="row">
@@ -34,14 +39,12 @@
 </template>
 
 <script>
-import UserListPage from './components/UserListPage.vue'
 import store from './store/Store.js'
 import loginService from './service/LoginService.js'
 
 export default {
   name: 'App',
   components: {
-    UserListPage
   },
   data: function () {
     return {

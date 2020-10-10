@@ -12,12 +12,20 @@ h1,h2,h3,h4,h5,h6,.logo {
   font-weight: 300;
 }
 
-header {
-  margin-bottom: 20px;
-}
-
 header .username {
   padding: calc(2 * var(--universal-padding)) calc(2 * var(--universal-padding));
+}
+
+nav {
+  border-top: 0px !important;
+}
+
+nav h4 {
+  margin: 10px 0px 10px 0px;
+}
+nav a {
+  margin-left: 10px;
+  font-weight: 600;
 }
 
 button.primary {

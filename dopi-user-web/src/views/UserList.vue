@@ -4,17 +4,17 @@
 
       <div class="col-sm-12">
         <h2>Users</h2>
-        <table style="width:100%;">
+        <table class="cardized">
           <thead>
             <th>Username</th>
             <th>Roles</th>
           </thead>
           <tbody>
             <tr v-for="item in store.users" :key="item.username">
-              <td>
+              <td data-label="Username">
                   {{ item.username }}
               </td>
-              <td>
+              <td data-label="Roles">
                 test
               </td>
             </tr>
