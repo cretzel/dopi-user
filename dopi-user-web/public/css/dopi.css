@@ -35,3 +35,13 @@ button.primary {
 button.primary {
   --button-hover-back-color: #1b83a7 !important;
 }
+
+header, header .logo, .drawer-toggle {
+  background-color: #35454e !important;
+  color: white !important;
+}
+
+table th {
+  background-color: #5785a0;
+  color: white;
+}

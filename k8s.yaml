@@ -48,5 +48,55 @@ spec:
             backend:
               serviceName: dopi-user-backend
               servicePort: 80
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: dopi-user-web
+  labels:
+    app: dopi-user-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dopi-user-web
+  template:
+    metadata:
+      labels:
+        app: dopi-user-web
+    spec:
+      containers:
+      - name: dopi-user-web
+        image: cretzel/dopi-user-web:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: dopi-user-web
+spec:
+  selector:
+    app: dopi-user-web
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: dopi-user-web-ingress
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /users
+            backend:
+              serviceName: dopi-user-web
+              servicePort: 80
+
+
 
 
