@@ -6,24 +6,32 @@
         <div v-if="store.user">
           <h2>{{store.user.username}}</h2>
 
-          <table class=" horizontal">
-            <thead>
-                <tr>
-                  <th>Username</th>
-                  <th>Roles</th>
-                </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td data-label="Username">
-                    {{ store.user.username }}
-                </td>
-                <td data-label="Roles">
-                  {{ store.user.roles }}
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <form>
+              <div class="row responsive-label">
+                <div class="col-sm-12 col-md-3">
+                  <label for="username">Username</label>
+                </div>
+                <div class="col-sm-12 col-md">
+                  <span v-bind:class="{hidden: editMode}">{{ store.user.username }}</span>
+                  <input type="text" id="Username" placeholder="Username" v-bind:value="store.user.username" v-bind:class="{invisible: !editMode}"/>
+                </div>
+
+              </div>
+
+              <div class="row responsive-label">
+                <div class="col-sm-12 col-md-3">
+                  <label for="roles">Roles</label>
+                </div>
+                <div class="col-sm-12 col-md">
+                  <span v-bind:class="{hidden: editMode}">{{ store.user.roles }}</span>
+                  <input type="text" id="Roles" placeholder="Roles" v-bind:value="store.user.roles" v-bind:class="{invisible: !editMode}"/>
+                </div>
+              </div>
+          </form>
+
+          <button v-on:click="toggleEditMode" v-bind:class="{hidden: editMode}">Edit</button>
+          <button v-on:click="toggleEditMode" v-bind:class="{hidden: !editMode}">Save</button>
+
         </div>
       </div>
     </div>
@@ -40,12 +48,18 @@ export default {
   },
   data: function () {
     return {
+      editMode: false,
       store: store
     }
   },
   created: function () {
     store.setUser(null);
     userService.getUser(this.$route.params.username);
+  },
+  methods: {
+    toggleEditMode: function() {
+      this.editMode = !this.editMode;
+    }
   }
 
  

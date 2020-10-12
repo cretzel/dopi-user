@@ -6,6 +6,7 @@ html, * {
   font-family: Avenir,Helvetica,Arial,sans-serif;
   -webkit-font-smoothing: antialiased !important;
   -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
 }
 
 h1,h2,h3,h4,h5,h6,.logo {
@@ -44,4 +45,16 @@ header, header .logo, .drawer-toggle {
 table th {
   background-color: #5785a0;
   color: white;
+}
+
+.responsive-label {
+  align-items: center;
+}
+
+form label {
+  font-weight: 500;
+}
+
+.invisible {
+  visibility: hidden !important;
 }
