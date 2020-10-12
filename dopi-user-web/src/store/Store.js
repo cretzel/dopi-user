@@ -4,6 +4,7 @@ class Store {
         this.userInfo = null;
         this.loggedIn = this.userInfo != null
         this.users = null;
+        this.user = null;
     }
 
     setUserInfo(userInfo) {
@@ -19,6 +20,10 @@ class Store {
 
     setUsers(users) {
         this.users = users;
+    }
+
+    setUser(user) {
+        this.user = user;
     }
 
 }

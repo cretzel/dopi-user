@@ -6,13 +6,15 @@
         <h2>Users</h2>
         <table class="cardized">
           <thead>
-            <th>Username</th>
-            <th>Roles</th>
+            <tr>
+              <th>Username</th>
+              <th>Roles</th>
+            </tr>
           </thead>
           <tbody>
             <tr v-for="item in store.users" :key="item.username">
               <td data-label="Username">
-                  {{ item.username }}
+                  <router-link :to="{ name: 'UserDetails', params: { username: item.username }}">{{ item.username }}</router-link>                  
               </td>
               <td data-label="Roles">
                 test
@@ -30,7 +32,7 @@ import userService from '../service/UserService.js'
 import store from '../store/Store.js'
 
 export default {
-  name: 'LoginForm',
+  name: 'UserList',
   props: {
   },
   data: function () {

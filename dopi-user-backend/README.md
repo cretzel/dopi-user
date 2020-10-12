@@ -10,4 +10,5 @@ gow run main.go
 ## build
 ```
 docker build -t cretzel/dopi-user-backend .
+docker push cretzel/dopi-user-backend
 ```

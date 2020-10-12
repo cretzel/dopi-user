@@ -16,7 +16,6 @@ class UserService {
 
         if (response.ok) {
             let user = await response.json();
-            console.log("Fetched user:", user);
             return user;
         } else {
             console.log("Error fetching user");
@@ -33,8 +32,23 @@ class UserService {
 
         if (response.ok) {
             let users = await response.json();
-            console.log("Fetched users:", users);
             store.setUsers(users);
+        } else {
+            console.log("Error fetching user");
+        }
+    }
+
+    async getUser(username) {
+        const response = await fetch("/api/user/users/" + username , {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+
+        if (response.ok) {
+            let user = await response.json();
+            store.setUser(user);
         } else {
             console.log("Error fetching user");
         }
