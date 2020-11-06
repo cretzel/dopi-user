@@ -1,24 +1,33 @@
 <template>
   <div id="app">
-    <header class="row">
-      <a href="/" class="logo col-sm col-md">Dopi</a>
-      <label for="doc-drawer-checkbox" class="button drawer-toggle col-sm-last"></label>
-      <a class="doc username col-sm-1 col-md-last" v-if="store.loggedIn">{{ store.userInfo.username }}</a>
-    </header>
+
+    <nav class="navbar primary" role="navigation" aria-label="main navigation">
+          <div class="navbar-brand">
+            <a class="navbar-item" href="/">
+              <h1>Dopi</h1>
+            </a>
+        
+            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" onclick="document.querySelector('.navbar-menu').classList.toggle('is-active');">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+              </a>
+          </div>
+        
+          <div class="navbar-menu">
+            <div class="navbar-start">
+              <a class="navbar-item">User Management</a>
+            </div>
+        
+            <div class="navbar-end">
+              <a class="navbar-item" v-if="store.loggedIn">{{ store.userInfo.username }}</a>              
+            </div>
+          </div>
+    </nav>
 
 
-    <div class="row" id="doc-wrapper">
-      <input id="doc-drawer-checkbox" class="drawer" value="on" type="checkbox">
-      <nav class="col-md-4 col-lg-3" id="nav-drawer">
-        <h4>Dopi User Management</h4>
-        <label for="doc-drawer-checkbox" class="button drawer-close"></label>
-        <router-link to="/">Users</router-link>
-      </nav>
-
-      <main class="col-sm-12 col-md-8 col-lg-9" id="doc-content">
-        <div class="fluid">
-
-          <div class="container">
+    <section class="section">
+        <div class="container">
           <div v-if="store.loggedIn" class="row">
             <div class="col-sm-12">
               <router-view/>
@@ -29,12 +38,9 @@
             You are not logged in. Click <a href="/">here</a> to login.
             </div>
           </div>
-          </div>
 
         </div>
-      </main>
-
-    </div>
+    </section>
   </div>
 </template>
 

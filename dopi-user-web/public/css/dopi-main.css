@@ -1,0 +1,21 @@
+
+html, * {
+  font-family: Avenir,Helvetica,Arial,sans-serif;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
+}
+
+nav.primary {
+  border-bottom: .0625rem solid #ccc;
+}
+
+nav.primary h1 {
+  font-weight: 200;
+  font-size: 1.5rem;
+}
+
+h1.title {
+  font-weight: 400;
+  font-size: 1.6rem;
+}

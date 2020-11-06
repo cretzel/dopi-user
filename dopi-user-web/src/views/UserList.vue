@@ -1,29 +1,30 @@
 <template>
-  <div class="container">
-    <div class="row">
 
-      <div class="col-sm-12">
-        <h2>Users</h2>
-        <table class="cardized">
-          <thead>
-            <tr>
-              <th>Username</th>
-              <th>Roles</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="item in store.users" :key="item.username">
-              <td data-label="Username">
-                  <router-link :to="{ name: 'UserDetails', params: { username: item.username }}">{{ item.username }}</router-link>                  
-              </td>
-              <td data-label="Roles">
-                test
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+  <div>
+    <h1 class="title">Users</h1>
+    <h2 class="subtitle">
+      View all your dopi users, create new users or edit them.
+    </h2>
+
+    <table class="table is-hoverable is-fullwidth">
+      <thead>
+        <tr>
+          <th>Username</th>
+          <th>Roles</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="item in store.users" :key="item.username">
+          <td>
+              <router-link :to="{ name: 'UserDetails', params: { username: item.username }}">{{ item.username }}</router-link>                  
+          </td>
+          <td>
+            {{item.roles}}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
   </div>
 </template>
 

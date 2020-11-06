@@ -1,41 +1,40 @@
 <template>
-  <div class="container">
-    <div class="row">
 
-      <div class="col-sm-12">
-        <div v-if="store.user">
-          <h2>{{store.user.username}}</h2>
+<div>
+    <h1 class="title">User Details</h1>
+    <h2 class="subtitle">
+      Edit the details of this user like e-mail, roles, etc.
+    </h2>
 
-          <form>
-              <div class="row responsive-label">
-                <div class="col-sm-12 col-md-3">
-                  <label for="username">Username</label>
-                </div>
-                <div class="col-sm-12 col-md">
-                  <span v-bind:class="{hidden: editMode}">{{ store.user.username }}</span>
-                  <input type="text" id="Username" placeholder="Username" v-bind:value="store.user.username" v-bind:class="{invisible: !editMode}"/>
-                </div>
+    <div v-if="store.user">
 
-              </div>
+      <div class="columns">
+        <div class="column is-half">
 
-              <div class="row responsive-label">
-                <div class="col-sm-12 col-md-3">
-                  <label for="roles">Roles</label>
-                </div>
-                <div class="col-sm-12 col-md">
-                  <span v-bind:class="{hidden: editMode}">{{ store.user.roles }}</span>
-                  <input type="text" id="Roles" placeholder="Roles" v-bind:value="store.user.roles" v-bind:class="{invisible: !editMode}"/>
-                </div>
-              </div>
-          </form>
+          <div class="field">
+            <label class="label">Username</label>
+            <div class="control">
+              <input class="input" type="text" id="Roles" disabled placeholder="Roles" v-bind:value="store.user.username" />
+            </div>
+          </div>    
 
-          <button v-on:click="toggleEditMode" v-bind:class="{hidden: editMode}">Edit</button>
-          <button v-on:click="toggleEditMode" v-bind:class="{hidden: !editMode}">Save</button>
+          <div class="field">
+            <label class="label">Roles</label>
+            <div class="control">
+              <input class="input" type="text" id="Roles" placeholder="Roles" v-bind:value="store.user.roles" />
+            </div>
+            <p class="help">The roles or permissions a user is assigned</p>
+          </div>    
 
         </div>
       </div>
+
     </div>
-  </div>
+
+
+    <button v-on:click="toggleEditMode" class="button is-primary mt-3">Save</button>
+
+</div>
 </template>
 
 <script>
