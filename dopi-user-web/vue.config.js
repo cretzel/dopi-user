@@ -5,7 +5,7 @@ module.exports = {
     devServer: {
       before: devServer,
       proxy: {
-        '^/api/user': {
+        '/api/user/users': {
           target: 'http://localhost:8081'
         }
     }

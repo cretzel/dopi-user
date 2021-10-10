@@ -20,7 +20,7 @@ func createJwtToken_should_create_token(t *testing.T) {
 	username := "admin"
 	roles := []string{"ROLE_ADMIN", "ROLE_USER", "ROLE_APP"}
 	user := &model.User{Username: username, Roles: roles}
-	secret := os.Getenv("JWT_SECRET")
+	secret := "asdf"
 	t.Log("Secret", secret)
 
 	//Act
@@ -31,7 +31,7 @@ func createJwtToken_should_create_token(t *testing.T) {
 
 	//Assert
 	if tokenString == "" {
-		log.Fatalf("xUnable to create token")
+		log.Fatalf("Unable to create token")
 		t.Error("Unable to create token")
 	}
 }
