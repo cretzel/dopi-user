@@ -1,21 +1,22 @@
 package service
 
 import (
+	"context"
 	"dopi-user/model"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 	"log"
 	"os"
-
-	"gopkg.in/mgo.v2"
-	"gopkg.in/mgo.v2/bson"
 )
 
 type UserService struct {
-	collection *mgo.Collection
+	client     *Client
+	collection *mongo.Collection
 }
 
-func NewUserService(session *Session) *UserService {
-	collection := session.session.DB("dopi-user").C("users")
-	userService := UserService{collection: collection}
+func NewUserService(client *Client) *UserService {
+	collection := client.GetCollection("dopi-user", "users")
+	userService := UserService{client: client, collection: collection}
 	userService.CreateAdminUser()
 	return &userService
 }
@@ -34,13 +35,16 @@ func (u *UserService) CreateAdminUser() {
 			Password: passwordCrypted,
 			Roles:    []string{"admin"},
 		}
-		u.CreateUser(admin)
+		_, err = u.CreateUser(admin)
+		if err != nil {
+			return
+		}
 	}
-	log.Println("admin user: ", admin.Username)
+	log.Println("admin user:", admin.Username)
 }
 
 func (u *UserService) CreateUser(user *model.User) (*model.User, error) {
-	err := u.collection.Insert(&user)
+	_, err := u.collection.InsertOne(context.TODO(), &user)
 	if err != nil {
 		log.Printf("Error creating user: %s", err.Error())
 		return user, err
@@ -49,9 +53,7 @@ func (u *UserService) CreateUser(user *model.User) (*model.User, error) {
 }
 
 func (u *UserService) UpdateUser(user *model.User) (*model.User, error) {
-	log.Println("Save user", user.Roles)
-	_, err := u.collection.UpsertId(user.Username, user)
-	//err := u.collection.Update(bson.M{"_id": user.Username}, bson.M{"roles": user.Roles})
+	_, err := u.collection.ReplaceOne(context.TODO(), bson.M{"_id": user.Username}, &user)
 	if err != nil {
 		log.Printf("Error updating user: %s", err.Error())
 		return user, err
@@ -61,14 +63,23 @@ func (u *UserService) UpdateUser(user *model.User) (*model.User, error) {
 
 func (u *UserService) GetUserByUsername(username string) (*model.User, error) {
 	user := model.User{}
-	err := u.collection.FindId(username).One(&user)
+	err := u.collection.FindOne(context.TODO(), bson.M{"_id": username}).Decode(&user)
 	return &user, err
 }
 
 func (u *UserService) GetUsers() ([]model.User, error) {
-	users := []model.User{}
-	err := u.collection.Find(bson.M{}).All(&users)
-	return users, err
+	var users []model.User
+	cursor, err := u.collection.Find(context.TODO(), bson.M{})
+	if err != nil {
+		log.Printf("Error getting users: %s", err.Error())
+		return users, err
+	}
+	if err = cursor.All(context.TODO(), &users); err != nil {
+		log.Printf("Error getting users: %s", err.Error())
+		return users, err
+	}
+
+	return users, nil
 }
 
 func (u *UserService) Login(username string, password string) (*model.User, error) {

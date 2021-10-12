@@ -20,7 +20,7 @@ describe('Dopi Users', () => {
         cy.get('#roles').type(" user")
         cy.get('#save').click()
         cy.visit('http://localhost:8080/users/admin')
-        cy.get('#roles').should('have.value', 'admin user')
+        cy.get('#roles').should('have.value', 'admin, user')
 
     })
 })

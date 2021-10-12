@@ -3,24 +3,23 @@ package main
 import (
 	"dopi-user/router"
 	"dopi-user/service"
+	"github.com/joho/godotenv"
 	"log"
 	"net/http"
 	"os"
-
-	"github.com/joho/godotenv"
 )
 
 func main() {
 	godotenv.Load(".env.local")
 	godotenv.Load()
 
-	session, err := service.NewSession()
+	client, err := service.NewClient()
 	if err != nil {
-		log.Fatalln("unable to connect to mongodb")
+		log.Fatalln("unable to connect to mongodb", err)
 	}
-	defer session.Close()
+	defer client.Close()
 
-	userService := service.NewUserService(session)
+	userService := service.NewUserService(client)
 	userRouter := router.NewUserRouter(userService)
 
 	port := os.Getenv("PORT")

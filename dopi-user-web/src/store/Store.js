@@ -40,8 +40,7 @@ class Store {
         if (this.user == null) {
             return null;
         }
-        let roles = this.user.roles.split(/,\s/);
-        console.log("user.roles", this.user.roles)
+        let roles = this.user.roles.split(/[,\s]+/)
         console.log("roles", roles)
         return {
             username: this.user.username,
