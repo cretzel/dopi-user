@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-type UserResponse struct {
+type UserDto struct {
 	Id       string   `json:"id,omitempty"`
 	Username string   `json:"username,omitempty"`
 	Roles    []string `json:"roles"`
@@ -25,17 +25,24 @@ type LoginRequest struct {
 	Password string `json:"password"`
 }
 
-func toUserResponse(user *model.User) *UserResponse {
-	return &UserResponse{
+func toUserDto(user *model.User) *UserDto {
+	return &UserDto{
 		Username: user.Username,
 		Roles:    user.Roles,
 	}
 }
 
-func toUsersResponse(users []model.User) []UserResponse {
-	userArray := make([]UserResponse, len(users))
+func toUser(user *UserDto) *model.User {
+	return &model.User{
+		Username: user.Username,
+		Roles:    user.Roles,
+	}
+}
+
+func toUserDtos(users []model.User) []UserDto {
+	userArray := make([]UserDto, len(users))
 	for i, u := range users {
-		userArray[i] = *toUserResponse(&u)
+		userArray[i] = *toUserDto(&u)
 	}
 	return userArray
 }

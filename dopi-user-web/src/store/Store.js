@@ -22,8 +22,31 @@ class Store {
         this.users = users;
     }
 
-    setUser(user) {
-        this.user = user;
+    setUser(userDto) {
+        if (userDto == null) {
+            this.user = {
+                username: '',
+                roles: ''
+            }
+            return
+        }
+        this.user = {
+            username: userDto.username,
+            roles: userDto.roles.join(', ')
+        }
+    }
+
+    getUserDto() {
+        if (this.user == null) {
+            return null;
+        }
+        let roles = this.user.roles.split(/,\s/);
+        console.log("user.roles", this.user.roles)
+        console.log("roles", roles)
+        return {
+            username: this.user.username,
+            roles: roles
+        }
     }
 
 }

@@ -48,9 +48,20 @@ func (u *UserService) CreateUser(user *model.User) (*model.User, error) {
 	return u.GetUserByUsername(user.Username)
 }
 
+func (u *UserService) UpdateUser(user *model.User) (*model.User, error) {
+	log.Println("Save user", user.Roles)
+	_, err := u.collection.UpsertId(user.Username, user)
+	//err := u.collection.Update(bson.M{"_id": user.Username}, bson.M{"roles": user.Roles})
+	if err != nil {
+		log.Printf("Error updating user: %s", err.Error())
+		return user, err
+	}
+	return u.GetUserByUsername(user.Username)
+}
+
 func (u *UserService) GetUserByUsername(username string) (*model.User, error) {
 	user := model.User{}
-	err := u.collection.Find(bson.M{"username": username}).One(&user)
+	err := u.collection.FindId(username).One(&user)
 	return &user, err
 }
 

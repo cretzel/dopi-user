@@ -1,6 +1,6 @@
 <template>
 
-  <div>
+  <div class="user-list">
     <h1 class="title">Users</h1>
     <h2 class="subtitle">
       View all your dopi users, create new users or edit them.
@@ -14,7 +14,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item in store.users" :key="item.username">
+        <tr v-for="item in store.users" :key="item.username" v-bind:data-user="item.username">
           <td>
               <router-link :to="{ name: 'UserDetails', params: { username: item.username }}">{{ item.username }}</router-link>                  
           </td>

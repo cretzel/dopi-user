@@ -28,3 +28,11 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 docker build -t cretzel/dopi-user-web .
 docker push cretzel/dopi-user-web
 ```
+
+## Cypres 
+
+### Install 
+```
+npm install cypress --save-dev
+./node_modules/cypress/bin/cypress open
+```

@@ -19,7 +19,8 @@ type UserRouter struct {
 func NewUserRouter(userService model.UserService) *UserRouter {
 
 	muxRouter := mux.NewRouter()
-	muxRouter.Use(commonMiddleware)
+	amw := AuthMiddleware{}
+	muxRouter.Use(amw.authMiddleware)
 	userRouter := UserRouter{MuxRouter: muxRouter, userService: userService}
 
 	muxRouter.HandleFunc("/api/user/login", userRouter.PostLogin).Methods("POST")
@@ -27,6 +28,7 @@ func NewUserRouter(userService model.UserService) *UserRouter {
 	muxRouter.HandleFunc("/api/user/logout", userRouter.PostLogout).Methods("POST")
 	muxRouter.HandleFunc("/api/user/users/me", userRouter.GetMe).Methods("GET")
 	muxRouter.HandleFunc("/api/user/users/{username}", userRouter.GetUser).Methods("GET")
+	muxRouter.HandleFunc("/api/user/users/{username}", userRouter.UpdateUser).Methods("PUT")
 	muxRouter.HandleFunc("/api/user/users", userRouter.GetUsers).Methods("GET")
 
 	return &userRouter
@@ -34,8 +36,8 @@ func NewUserRouter(userService model.UserService) *UserRouter {
 
 func (ur *UserRouter) PostLogin(w http.ResponseWriter, r *http.Request) {
 	var loginRequest LoginRequest
-	decoder := json.NewDecoder(r.Body)
-	err := decoder.Decode(&loginRequest)
+
+	err := json.NewDecoder(r.Body).Decode(&loginRequest)
 	if err != nil {
 		Error(w, 400, "Invalid body")
 		return
@@ -51,12 +53,7 @@ func (ur *UserRouter) PostLogin(w http.ResponseWriter, r *http.Request) {
 }
 
 func (ur *UserRouter) PostRefresh(w http.ResponseWriter, r *http.Request) {
-	claims, err := ur.checkAuth(r)
-	if err != nil {
-		Error(w, 401, "Not authenticated")
-		return
-	}
-
+	claims := ur.claims(r)
 	user, err := ur.userService.GetUserByUsername(claims.Username)
 	if err != nil {
 		Error(w, 404, "Not Found")
@@ -99,75 +96,61 @@ func (ur *UserRouter) createJwtReponse(user *model.User, w http.ResponseWriter) 
 }
 
 func (ur *UserRouter) GetUser(w http.ResponseWriter, r *http.Request) {
-	_, err := ur.checkAuth(r)
-	if err != nil {
-		Error(w, 401, "Not authenticated")
-		return
-	}
-
 	params := mux.Vars(r)
-
 	user, err := ur.userService.GetUserByUsername(params["username"])
 	if err != nil {
 		Error(w, 404, "Not Found")
 		return
 	}
 
-	response := toUserResponse(user)
+	response := toUserDto(user)
 	json.NewEncoder(w).Encode(response)
 }
 
 func (ur *UserRouter) GetUsers(w http.ResponseWriter, r *http.Request) {
-	_, err := ur.checkAuth(r)
-	if err != nil {
-		Error(w, 401, "Not authenticated")
-		return
-	}
-
 	users, err := ur.userService.GetUsers()
 	if err != nil {
 		Error(w, 404, "Not Found")
 		return
 	}
 
-	response := toUsersResponse(users)
+	response := toUserDtos(users)
 	json.NewEncoder(w).Encode(response)
 }
 
 func (ur *UserRouter) GetMe(w http.ResponseWriter, r *http.Request) {
-	dopiClaims, err := ur.checkAuth(r)
-	if err != nil {
-		Error(w, 401, "Not authenticated")
-		return
-	}
-
-	user, err := ur.userService.GetUserByUsername(dopiClaims.Username)
+	claims := ur.claims(r)
+	user, err := ur.userService.GetUserByUsername(claims.Username)
 	if err != nil {
 		Error(w, 404, "Not Found")
 		return
 	}
 
-	response := toUserResponse(user)
+	response := toUserDto(user)
 	json.NewEncoder(w).Encode(response)
 }
 
-func (ur *UserRouter) checkAuth(r *http.Request) (*DopiClaims, error) {
-	jwtCookie, err := r.Cookie("dopi_jwt")
+func (ur *UserRouter) UpdateUser(w http.ResponseWriter, r *http.Request) {
+	var userDto UserDto
+	err := json.NewDecoder(r.Body).Decode(&userDto)
 	if err != nil {
-		return nil, err
+		Error(w, 400, "Bad Request")
+		return
 	}
 
-	token, err := VerifyToken(jwtCookie.Value)
+	user, err := ur.userService.GetUserByUsername(userDto.Username)
 	if err != nil {
-		return nil, err
+		Error(w, http.StatusNotFound, fmt.Sprintf("User not found: %s", userDto.Username))
+		return
 	}
 
-	dopiClaims, err := GetClaims(token)
-	if err != nil {
-		return nil, err
-	}
+	user.Roles = userDto.Roles
+	newUser, err := ur.userService.UpdateUser(user)
+	json.NewEncoder(w).Encode(toUserDto(newUser))
+}
 
-	return dopiClaims, nil
+func (ur *UserRouter) claims(r *http.Request) DopiClaims {
+	return (r.Context().Value("claims")).(DopiClaims)
 }
 
 func (ur *UserRouter) dumpRequest(r *http.Request) {
