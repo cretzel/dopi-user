@@ -12,4 +12,5 @@ type UserService interface {
 	GetUserByUsername(username string) (*User, error)
 	Login(username string, password string) (*User, error)
 	UpdateUser(user *User) (*User, error)
+	DeleteUser(username string) error
 }

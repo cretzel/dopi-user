@@ -16,7 +16,7 @@
         
           <div class="navbar-menu">
             <div class="navbar-start">
-              <a class="navbar-item">User Management</a>
+              <router-link class="navbar-item" :to="{ name: 'UserList'}">User Management</router-link>
             </div>
         
             <div class="navbar-end">

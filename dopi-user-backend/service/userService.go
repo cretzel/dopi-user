@@ -26,13 +26,9 @@ func (u *UserService) CreateAdminUser() {
 	if err != nil {
 		log.Println("Creating admin user")
 		password := os.Getenv("ADMIN_PASSWORD")
-		passwordCrypted, err := Generate(password)
-		if err != nil {
-			panic("Could not crypt password")
-		}
 		admin = &model.User{
 			Username: "admin",
-			Password: passwordCrypted,
+			Password: password,
 			Roles:    []string{"admin"},
 		}
 		_, err = u.CreateUser(admin)
@@ -44,12 +40,27 @@ func (u *UserService) CreateAdminUser() {
 }
 
 func (u *UserService) CreateUser(user *model.User) (*model.User, error) {
-	_, err := u.collection.InsertOne(context.TODO(), &user)
+	passwordCrypted, err := Generate(user.Password)
+	user.Password = passwordCrypted
+	if err != nil {
+		panic("Could not crypt password")
+	}
+
+	_, err = u.collection.InsertOne(context.TODO(), &user)
 	if err != nil {
 		log.Printf("Error creating user: %s", err.Error())
 		return user, err
 	}
 	return u.GetUserByUsername(user.Username)
+}
+
+func (u *UserService) DeleteUser(username string) error {
+	_, err := u.collection.DeleteOne(context.TODO(), bson.M{"_id": username})
+	if err != nil {
+		log.Printf("Error deleting user: %s", err.Error())
+		return err
+	}
+	return nil
 }
 
 func (u *UserService) UpdateUser(user *model.User) (*model.User, error) {

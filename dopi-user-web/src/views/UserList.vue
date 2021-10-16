@@ -6,22 +6,28 @@
       View all your dopi users, create new users or edit them.
     </h2>
 
+    <div class="columns is-pulled-right">
+      <div class="column">
+        <router-link id="create-user-button" :to="{ name: 'NewUser'}" tag="button" class="button is-primary mt-3">New User</router-link>
+      </div>
+    </div>
+
     <table class="table is-hoverable is-fullwidth">
       <thead>
-        <tr>
-          <th>Username</th>
-          <th>Roles</th>
-        </tr>
+      <tr>
+        <th>Username</th>
+        <th>Roles</th>
+      </tr>
       </thead>
       <tbody>
-        <tr v-for="item in users" :key="item.username" v-bind:data-user="item.username">
-          <td>
-              <router-link :to="{ name: 'EditUser', params: { username: item.username }}">{{ item.username }}</router-link>
-          </td>
-          <td>
-            {{item.roles}}
-          </td>
-        </tr>
+      <tr v-for="item in users" :key="item.username" v-bind:data-user="item.username">
+        <td>
+          <router-link :to="{ name: 'EditUser', params: { username: item.username }}">{{ item.username }}</router-link>
+        </td>
+        <td>
+          {{ item.roles }}
+        </td>
+      </tr>
       </tbody>
     </table>
 

@@ -4,6 +4,7 @@ import (
 	"dopi-user/model"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"net/http/httputil"
 	"time"
@@ -29,6 +30,8 @@ func NewUserRouter(userService model.UserService) *UserRouter {
 	muxRouter.HandleFunc("/api/user/users/me", userRouter.GetMe).Methods("GET")
 	muxRouter.HandleFunc("/api/user/users/{username}", userRouter.GetUser).Methods("GET")
 	muxRouter.HandleFunc("/api/user/users/{username}", userRouter.UpdateUser).Methods("PUT")
+	muxRouter.HandleFunc("/api/user/users/{username}", userRouter.CreateUser).Methods("POST")
+	muxRouter.HandleFunc("/api/user/users/{username}", userRouter.DeleteUser).Methods("DELETE")
 	muxRouter.HandleFunc("/api/user/users", userRouter.GetUsers).Methods("GET")
 
 	return &userRouter
@@ -128,6 +131,38 @@ func (ur *UserRouter) GetMe(w http.ResponseWriter, r *http.Request) {
 
 	response := toUserDto(user)
 	json.NewEncoder(w).Encode(response)
+}
+
+func (ur *UserRouter) CreateUser(w http.ResponseWriter, r *http.Request) {
+	var userDto UserDto
+	err := json.NewDecoder(r.Body).Decode(&userDto)
+	if err != nil {
+		Error(w, 400, "Bad Request")
+		return
+	}
+
+	user, err := ur.userService.CreateUser(toUser(&userDto))
+	if err != nil {
+		log.Println(err)
+		Error(w, http.StatusInternalServerError, fmt.Sprintf("Cannot create user: %s", err.Error()))
+		return
+	}
+
+	json.NewEncoder(w).Encode(toUserDto(user))
+}
+
+func (ur *UserRouter) DeleteUser(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	username := params["username"]
+	_, err := ur.userService.GetUserByUsername(username)
+	if err != nil {
+		Error(w, 404, "Not Found")
+		return
+	}
+	err = ur.userService.DeleteUser(username)
+	if err != nil {
+		Error(w, http.StatusInternalServerError, fmt.Sprintf("Cannot create user: %s", err.Error()))
+	}
 }
 
 func (ur *UserRouter) UpdateUser(w http.ResponseWriter, r *http.Request) {

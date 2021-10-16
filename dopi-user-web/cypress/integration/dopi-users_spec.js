@@ -21,4 +21,29 @@ describe('Dopi Users', () => {
         cy.visit('http://localhost:8080/users/admin')
         cy.get('#roles').should('have.value', 'admin, user')
     })
+
+    it('Should create & delete user', () => {
+        const rd = Math.floor(Math.random() * 1000);
+        const username = `user-${rd}`
+
+        cy.visit('http://localhost:8080/users')
+        cy.get('#create-user-button').click()
+        cy.get('.new-user')
+        cy.get('#username').clear().type(username)
+        cy.get('#roles').clear().type("user, bar")
+        cy.get('#password').clear().type("secret")
+        cy.get('#save').click()
+
+        cy.get('.user-list')
+        cy.get('.user-list tr[data-user = "' + username + '"] td:first').should('have.text', username)
+
+        cy.visit('http://localhost:8080/users/' + username)
+        cy.get('#delete').click();
+        cy.get('#doDelete').click();
+
+        cy.get('.user-list')
+        cy.get('.user-list tr[data-user = "' + username + '"] td:first').should('not.exist')
+
+    })
+
 })

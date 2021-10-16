@@ -14,7 +14,7 @@
           <div class="field">
             <label class="label">Username</label>
             <div class="control">
-              <input class="input" type="text" id="username" disabled placeholder="Roles" v-bind:value="user.username"/>
+              <input class="input" type="text" id="username" disabled v-bind:value="user.username"/>
             </div>
           </div>
 
@@ -31,20 +31,32 @@
 
     </div>
 
-    <button v-on:click="saveUser" id="save" class="button is-primary mt-3">Save</button>
-
+    <div class="columns">
+      <div class="column is-1">
+        <button v-on:click="saveUser" id="save" class="button is-primary mt-3">Save</button>
+      </div>
+      <div v-if="!deleteMode" class="column is-2">
+        <button v-on:click="deleteUser" id="delete" class="button is-light mt-3">Delete</button>
+      </div>
+      <div v-if="deleteMode" class="column is-1">
+        <button v-on:click="confirmDeleteUser" id="doDelete" class="button is-danger mt-3">Confirm Delete</button>
+      </div>
+    </div>
   </div>
+
 </template>
 
 <script>
 import userService from '../service/UserService.js'
 import store from '../store/Store.js'
+import router from "@/router";
 
 export default {
   name: 'edit-user',
   data: function () {
     return {
-      user: {}
+      user: {},
+      deleteMode: false
     }
   },
   methods: {
@@ -71,6 +83,19 @@ export default {
           })
           .catch(() => {
             store.setMessage({text: 'Cannot save user', type: 'danger'});
+          });
+    },
+    deleteUser() {
+      this.deleteMode = true;
+    },
+    confirmDeleteUser() {
+      userService.deleteUser(this.$route.params.username)
+          .then(() => {
+            router.push({ name: 'UserList'})
+            store.setMessage({text: 'User deleted', type: 'success'});
+          })
+          .catch(() => {
+            store.setMessage({text: 'Cannot delete user', type: 'danger'});
           });
     }
   },

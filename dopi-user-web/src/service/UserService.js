@@ -1,13 +1,7 @@
-import store from "../store/Store";
-
 class UserService {
 
-    constructor (store) {
-        this.store = store
-    }
-
     async getMe() {
-        const response = await fetch("/api/user/users/me" , {
+        const response = await fetch("/api/user/users/me", {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -23,7 +17,7 @@ class UserService {
     }
 
     async getUsers() {
-        const response = await fetch("/api/user/users" , {
+        const response = await fetch("/api/user/users", {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -38,7 +32,7 @@ class UserService {
     }
 
     async getUser(username) {
-        const response = await fetch("/api/user/users/" + username , {
+        const response = await fetch("/api/user/users/" + username, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -52,7 +46,7 @@ class UserService {
     }
 
     async putUser(user) {
-        const response = await fetch("/api/user/users/" + user.username , {
+        const response = await fetch("/api/user/users/" + user.username, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -60,11 +54,38 @@ class UserService {
             body: JSON.stringify(user)
         });
         if (response.ok) {
-            let user = await response.json();
-            store.setUser(user);
-        } else {
-            console.log("Error updating user");
+            return await response.json();
         }
+        console.log("Error updating user");
+        return Promise.reject("Error updating user")
+    }
+
+    async postUser(user) {
+        const response = await fetch("/api/user/users/" + user.username, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(user)
+        });
+        if (response.ok) {
+            return await response.json();
+        }
+        return Promise.reject("Error creating user")
+    }
+
+    async deleteUser(username) {
+        const response = await fetch("/api/user/users/" + username, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        if (response.ok) {
+            return Promise.resolve();
+        }
+        return Promise.reject("Error deleting user");
+
     }
 }
 
