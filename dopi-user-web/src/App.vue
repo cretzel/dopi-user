@@ -30,6 +30,7 @@
         <div class="container">
           <div v-if="store.loggedIn" class="row">
             <div class="col-sm-12">
+              <message/>
               <router-view/>
             </div>
           </div>
@@ -47,14 +48,18 @@
 <script>
 import store from './store/Store.js'
 import loginService from './service/LoginService.js'
+import Message from "@/components/Message";
 
 export default {
   name: 'App',
-  components: {
-  },
+  components: {Message},
   data: function () {
     return {
-      store: store
+      store: store,
+      error: {
+        type: 'danger',
+        text: null
+      }
     }
   },
   created: function () {

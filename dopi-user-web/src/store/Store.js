@@ -3,8 +3,7 @@ class Store {
     constructor() {
         this.userInfo = null;
         this.loggedIn = this.userInfo != null
-        this.users = null;
-        this.user = null;
+        this.message = null;
     }
 
     setUserInfo(userInfo) {
@@ -18,36 +17,9 @@ class Store {
         }
     }
 
-    setUsers(users) {
-        this.users = users;
+    setMessage(message) {
+        this.message = message;
     }
-
-    setUser(userDto) {
-        if (userDto == null) {
-            this.user = {
-                username: '',
-                roles: ''
-            }
-            return
-        }
-        this.user = {
-            username: userDto.username,
-            roles: userDto.roles.join(', ')
-        }
-    }
-
-    getUserDto() {
-        if (this.user == null) {
-            return null;
-        }
-        let roles = this.user.roles.split(/[,\s]+/)
-        console.log("roles", roles)
-        return {
-            username: this.user.username,
-            roles: roles
-        }
-    }
-
 }
 
 export default new Store()

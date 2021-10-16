@@ -31,8 +31,7 @@ class UserService {
         })
 
         if (response.ok) {
-            let users = await response.json();
-            store.setUsers(users);
+            return response.json();
         } else {
             console.log("Error fetching user");
         }
@@ -47,11 +46,9 @@ class UserService {
         })
 
         if (response.ok) {
-            let user = await response.json();
-            store.setUser(user);
-        } else {
-            console.log("Error fetching user");
+            return response.json();
         }
+        return Promise.reject("Error loading user")
     }
 
     async putUser(user) {

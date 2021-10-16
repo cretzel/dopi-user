@@ -14,7 +14,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item in store.users" :key="item.username" v-bind:data-user="item.username">
+        <tr v-for="item in users" :key="item.username" v-bind:data-user="item.username">
           <td>
               <router-link :to="{ name: 'UserDetails', params: { username: item.username }}">{{ item.username }}</router-link>                  
           </td>
@@ -34,15 +34,25 @@ import store from '../store/Store.js'
 
 export default {
   name: 'UserList',
-  props: {
-  },
   data: function () {
     return {
-      store: store
+      users: []
+    }
+  },
+  methods: {
+    getUsers() {
+      userService.getUsers()
+          .then(userDtos => {
+            console.log(userDtos);
+            this.users = userDtos;
+          })
+          .catch(() => {
+            store.setMessage({text: 'Cannot get users', type: 'danger'});
+          });
     }
   },
   created: function () {
-    userService.getUsers();
+    this.getUsers();
   }
 }
 </script>
