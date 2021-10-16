@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import UserList from '../views/UserList.vue'
-import UserDetails from '../views/UserDetails.vue'
+import EditUser from '../views/EditUser.vue'
 
 Vue.use(VueRouter)
 
@@ -13,8 +13,8 @@ const routes = [
   },
   {
     path: '/:username',
-    name: 'UserDetails',
-    component: UserDetails
+    name: 'EditUser',
+    component: EditUser
   }
 
 ]

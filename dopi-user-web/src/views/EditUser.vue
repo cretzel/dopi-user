@@ -41,7 +41,7 @@ import userService from '../service/UserService.js'
 import store from '../store/Store.js'
 
 export default {
-  name: 'User',
+  name: 'edit-user',
   data: function () {
     return {
       user: {}

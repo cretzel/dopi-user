@@ -16,7 +16,7 @@
       <tbody>
         <tr v-for="item in users" :key="item.username" v-bind:data-user="item.username">
           <td>
-              <router-link :to="{ name: 'UserDetails', params: { username: item.username }}">{{ item.username }}</router-link>                  
+              <router-link :to="{ name: 'EditUser', params: { username: item.username }}">{{ item.username }}</router-link>
           </td>
           <td>
             {{item.roles}}
