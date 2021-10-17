@@ -1,5 +1,12 @@
 describe('Dopi Users', () => {
 
+    let username;
+
+    beforeEach(() => {
+        const rd = Math.floor(Math.random() * 1000);
+        username = `user-${rd}`
+    })
+
     it('Should open user list', () => {
         cy.visit('http://localhost:8080/users')
         cy.get('.user-list')
@@ -23,8 +30,6 @@ describe('Dopi Users', () => {
     })
 
     it('Should create & delete user', () => {
-        const rd = Math.floor(Math.random() * 1000);
-        const username = `user-${rd}`
 
         cy.visit('http://localhost:8080/users')
         cy.get('#create-user-button').click()
@@ -43,6 +48,26 @@ describe('Dopi Users', () => {
 
         cy.get('.user-list')
         cy.get('.user-list tr[data-user = "' + username + '"] td:first').should('not.exist')
+
+    })
+
+
+    it('Should login', () => {
+
+        cy.visit('http://localhost:8080/users/new')
+        cy.get('.new-user')
+        cy.get('#username').clear().type(username)
+        cy.get('#roles').clear().type("user")
+        cy.get('#password').clear().type("secret")
+        cy.get('#save').click()
+
+        cy.visit('http://localhost:8080/users/login')
+
+        cy.get('#username').clear().type(username)
+        cy.get('#password').clear().type("secret")
+        cy.get('#login-button').click()
+
+        cy.get('.navbar-item.logged-in-user').should('have.text', username)
 
     })
 

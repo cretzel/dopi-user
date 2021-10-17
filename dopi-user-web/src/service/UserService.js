@@ -85,8 +85,8 @@ class UserService {
             return Promise.resolve();
         }
         return Promise.reject("Error deleting user");
-
     }
+
 }
 
 export default new UserService()
