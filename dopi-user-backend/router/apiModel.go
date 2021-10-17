@@ -13,6 +13,12 @@ type UserDto struct {
 	Roles    []string `json:"roles"`
 }
 
+type CreateUserDto struct {
+	Username string   `json:"username,omitempty"`
+	Roles    []string `json:"roles"`
+	Password string   `json:"password,omitempty"`
+}
+
 type UserInfoResponse struct {
 	Username  string    `json:"username"`
 	Roles     []string  `json:"roles"`
@@ -36,6 +42,14 @@ func toUser(user *UserDto) *model.User {
 	return &model.User{
 		Username: user.Username,
 		Roles:    user.Roles,
+	}
+}
+
+func createUserDtoToUser(user *CreateUserDto) *model.User {
+	return &model.User{
+		Username: user.Username,
+		Roles:    user.Roles,
+		Password: user.Password,
 	}
 }
 

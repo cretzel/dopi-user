@@ -134,14 +134,13 @@ func (ur *UserRouter) GetMe(w http.ResponseWriter, r *http.Request) {
 }
 
 func (ur *UserRouter) CreateUser(w http.ResponseWriter, r *http.Request) {
-	var userDto UserDto
+	var userDto CreateUserDto
 	err := json.NewDecoder(r.Body).Decode(&userDto)
 	if err != nil {
 		Error(w, 400, "Bad Request")
 		return
 	}
-
-	user, err := ur.userService.CreateUser(toUser(&userDto))
+	user, err := ur.userService.CreateUser(createUserDtoToUser(&userDto))
 	if err != nil {
 		log.Println(err)
 		Error(w, http.StatusInternalServerError, fmt.Sprintf("Cannot create user: %s", err.Error()))
@@ -184,8 +183,8 @@ func (ur *UserRouter) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(toUserDto(newUser))
 }
 
-func (ur *UserRouter) claims(r *http.Request) DopiClaims {
-	return (r.Context().Value("claims")).(DopiClaims)
+func (ur *UserRouter) claims(r *http.Request) *DopiClaims {
+	return (r.Context().Value("claims")).(*DopiClaims)
 }
 
 func (ur *UserRouter) dumpRequest(r *http.Request) {

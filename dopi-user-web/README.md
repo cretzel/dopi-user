@@ -29,7 +29,7 @@ docker build -t cretzel/dopi-user-web .
 docker push cretzel/dopi-user-web
 ```
 
-## Cypres 
+## Cypress
 
 ### Install 
 ```

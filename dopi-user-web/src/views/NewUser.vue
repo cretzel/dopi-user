@@ -62,7 +62,8 @@ export default {
     saveUser() {
       let userDto = {
         username: this.user.username,
-        roles: this.user.roles.split(/[,\s]+/)
+        roles: this.user.roles.split(/[,\s]+/),
+        password: this.user.password
       }
       userService.postUser(userDto)
           .then(() => {

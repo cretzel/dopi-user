@@ -15,7 +15,7 @@ func (amw *AuthMiddleware) authMiddleware(next http.Handler) http.Handler {
 		w.Header().Add("Content-Type", "application/json")
 
 		uri := r.RequestURI
-		if uri == "/api/user/login" || uri == "/api/user/logout" || uri == "/api/user/refresh" {
+		if uri == "/api/user/login" || uri == "/api/user/logout" {
 			next.ServeHTTP(w, r)
 			return
 		}

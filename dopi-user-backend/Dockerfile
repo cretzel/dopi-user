@@ -1,8 +1,7 @@
-FROM golang:1.15.2-alpine AS build
-RUN echo "foo"
+FROM golang:1.17.2 AS build
 WORKDIR /src
 COPY . .
-RUN GOOS=linux GOARCH=arm GOARM=5 go build main.go
+RUN GOOS=linux GOARCH=arm64 go build main.go
 
 FROM arm64v8/alpine
 COPY --from=build /src/main /main
