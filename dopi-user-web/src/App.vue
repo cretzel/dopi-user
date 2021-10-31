@@ -2,45 +2,38 @@
   <div id="app">
 
     <nav class="navbar primary" role="navigation" aria-label="main navigation">
-          <div class="navbar-brand">
-            <a class="navbar-item" href="/">
-              <h1>Dopi</h1>
-            </a>
-        
-            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" onclick="document.querySelector('.navbar-menu').classList.toggle('is-active');">
-                <span aria-hidden="true"></span>
-                <span aria-hidden="true"></span>
-                <span aria-hidden="true"></span>
-              </a>
-          </div>
-        
-          <div class="navbar-menu">
-            <div class="navbar-start">
-              <router-link class="navbar-item" :to="{ name: 'UserList'}">User Management</router-link>
-            </div>
-        
-            <div class="navbar-end">
-              <a class="navbar-item logged-in-user" v-if="store.loggedIn">{{ store.userInfo.username }}</a>
-            </div>
-          </div>
+      <div class="navbar-brand">
+        <a class="navbar-item" href="/">
+          <h1>Dopi</h1>
+        </a>
+
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false"
+           onclick="document.querySelector('.navbar-menu').classList.toggle('is-active');">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+
+      <div class="navbar-menu">
+        <div class="navbar-start">
+          <router-link class="navbar-item" :to="{ name: 'UserList'}">User Management</router-link>
+        </div>
+
+        <div class="navbar-end">
+          <a class="navbar-item logged-in-user" v-if="store.isLoggedIn()">{{ store.getUserInfo().username }}</a>
+        </div>
+      </div>
     </nav>
 
 
     <section class="section">
-        <div class="container">
-          <div v-if="store.loggedIn" class="row">
-            <div class="col-sm-12">
-              <message/>
-              <router-view/>
-            </div>
-          </div>
-          <div v-else class="row">
-            <div class="col-sm-12">
-            You are not logged in. Click <a href="/">here</a> to login.
-            </div>
-          </div>
-
+      <div class="container">
+        <div class="col-sm-12">
+          <message/>
+          <router-view/>
         </div>
+      </div>
     </section>
   </div>
 </template>
@@ -55,11 +48,7 @@ export default {
   components: {Message},
   data: function () {
     return {
-      store: store,
-      error: {
-        type: 'danger',
-        text: null
-      }
+      store: store
     }
   },
   created: function () {

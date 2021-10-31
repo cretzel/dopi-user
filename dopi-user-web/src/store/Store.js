@@ -1,20 +1,27 @@
 class Store {
 
     constructor() {
-        this.userInfo = null;
-        this.loggedIn = this.userInfo != null
         this.message = null;
     }
 
     setUserInfo(userInfo) {
-        console.log("userinfo ", userInfo)
         if (userInfo && userInfo.username) {
-            this.userInfo = userInfo
-            this.loggedIn = true
+            sessionStorage.setItem("userinfo", JSON.stringify(userInfo))
         } else {
-            this.userInfo = null
-            this.loggedIn = false
+            sessionStorage.removeItem("userinfo")
         }
+    }
+
+    getUserInfo() {
+        let userInfo = sessionStorage.getItem("userinfo")
+        if (userInfo != null) {
+            return JSON.parse(userInfo);
+        }
+        return null;
+    }
+
+    isLoggedIn() {
+        return this.getUserInfo() != null;
     }
 
     setMessage(message) {
