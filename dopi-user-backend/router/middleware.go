@@ -27,6 +27,17 @@ func (amw *AuthMiddleware) authMiddleware(next http.Handler) http.Handler {
 		}
 		ctx := r.Context()
 		ctx = context.WithValue(ctx, "claims", claims)
+
+		if uri == "/api/user/refresh" {
+			next.ServeHTTP(w, r.WithContext(ctx))
+			return
+		}
+
+		if !claims.hasRole("admin") {
+			Error(w, 401, "Not authenticated")
+			return
+		}
+
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }

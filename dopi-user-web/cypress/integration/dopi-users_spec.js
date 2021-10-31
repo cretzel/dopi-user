@@ -3,6 +3,12 @@ describe('Dopi Users', () => {
     let username;
 
     beforeEach(() => {
+        cy.visit('http://localhost:8080/users/login')
+        cy.get('#username').clear().type("admin")
+        cy.get('#password').clear().type("admin")
+        cy.get('#login-button').click()
+        cy.get('.navbar-item.logged-in-user').should('have.text', "admin")
+
         const rd = Math.floor(Math.random() * 1000);
         username = `user-${rd}`
     })
@@ -52,23 +58,35 @@ describe('Dopi Users', () => {
     })
 
 
-    it('Should login', () => {
+    it('New user should login', () => {
+        newUser(username, "user");
+        newUserLogin(username);
+    })
 
-        cy.visit('http://localhost:8080/users/new')
-        cy.get('.new-user')
-        cy.get('#username').clear().type(username)
-        cy.get('#roles').clear().type("user")
-        cy.get('#password').clear().type("Secret1/")
-        cy.get('#save').click()
-
-        cy.visit('http://localhost:8080/users/login')
-
-        cy.get('#username').clear().type(username)
-        cy.get('#password').clear().type("Secret1/")
-        cy.get('#login-button').click()
-
-        cy.get('.navbar-item.logged-in-user').should('have.text', username)
-
+    it('New user should not access user list', () => {
+        newUser(username);
+        newUserLogin(username);
+        cy.visit('http://localhost:8080/users');
+        cy.get('.user-list').should("not.exist");
     })
 
 })
+
+function newUser(username, roles) {
+    cy.visit('http://localhost:8080/users/new');
+    cy.get('.new-user');
+    cy.get('#username').clear().type(username);
+    cy.get('#roles').clear().type(roles ? roles : "user");
+    cy.get('#password').clear().type("Secret1/");
+    cy.get('#save').click();
+}
+
+function newUserLogin(username) {
+    cy.visit('http://localhost:8080/users/login');
+    cy.get('#username').clear().type(username);
+    cy.get('#password').clear().type("Secret1/");
+    cy.get('#login-button').click();
+    cy.get('.navbar-item.logged-in-user').should('have.text', username)
+}
+
+

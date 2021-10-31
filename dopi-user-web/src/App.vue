@@ -21,7 +21,7 @@
         </div>
 
         <div class="navbar-end">
-          <a class="navbar-item logged-in-user" v-if="store.isLoggedIn()">{{ store.getUserInfo().username }}</a>
+          <a class="navbar-item logged-in-user" v-if="store.loggedIn">{{ store.userInfo.username }}</a>
         </div>
       </div>
     </nav>

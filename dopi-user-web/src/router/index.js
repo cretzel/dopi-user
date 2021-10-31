@@ -19,7 +19,8 @@ const routes = [
         name: 'UserList',
         component: UserList,
         meta: {
-            requiresAuth: true
+            requiresAuth: true,
+            role: 'admin'
         }
     },
     {
@@ -27,7 +28,8 @@ const routes = [
         name: 'NewUser',
         component: NewUser,
         meta: {
-            requiresAuth: true
+            requiresAuth: true,
+            role: 'admin'
         }
     },
     {
@@ -35,7 +37,8 @@ const routes = [
         name: 'EditUser',
         component: EditUser,
         meta: {
-            requiresAuth: true
+            requiresAuth: true,
+            role: 'admin'
         }
     },
 
@@ -49,17 +52,19 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
     if (to.matched.some(record => record.meta.requiresAuth)) {
-        console.log("userinfo", store.getUserInfo())
-        if (store.getUserInfo() == null) {
-            next({
-                path: '/login',
-                params: {nextUrl: to.fullPath}
-            })
-        } else {
-            next()
+        const userInfo = store.userInfo
+        if (userInfo == null) {
+            next({path: '/login', params: {nextUrl: to.fullPath}})
+            return
         }
-    } else {
+        if (to.meta.role && !userInfo.roles.includes(to.meta.role)) {
+          next({path: '/login', params: {nextUrl: to.fullPath}})
+          return
+        }
         next()
-    }
+        return
+    } 
+    next()
+    
 })
 export default router

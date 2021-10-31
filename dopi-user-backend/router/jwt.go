@@ -17,6 +17,15 @@ type DopiClaims struct {
 	jwt.StandardClaims
 }
 
+func (claims *DopiClaims) hasRole(role string) bool {
+	for _, r := range claims.Roles {
+		if r == role {
+			return true
+		}
+	}
+	return false
+}
+
 func CreateJwt(user *model.User) (string, *jwt.Token, *DopiClaims, error) {
 	var err error
 
