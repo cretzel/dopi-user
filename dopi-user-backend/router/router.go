@@ -4,7 +4,6 @@ import (
 	"dopi-user/model"
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"net/http/httputil"
 	"time"
@@ -42,13 +41,13 @@ func (ur *UserRouter) PostLogin(w http.ResponseWriter, r *http.Request) {
 
 	err := json.NewDecoder(r.Body).Decode(&loginRequest)
 	if err != nil {
-		Error(w, 400, "Invalid body")
+		StatusError(w, err)
 		return
 	}
 
 	user, err := ur.userService.Login(loginRequest.Username, loginRequest.Password)
 	if err != nil {
-		Error(w, 400, "Invalid credentials")
+		StatusError(w, &model.StatusError{Code: 400, Reason: "Invalid credentials"})
 		return
 	}
 
@@ -59,7 +58,7 @@ func (ur *UserRouter) PostRefresh(w http.ResponseWriter, r *http.Request) {
 	claims := ur.claims(r)
 	user, err := ur.userService.GetUserByUsername(claims.Username)
 	if err != nil {
-		Error(w, 404, "Not Found")
+		StatusError(w, &model.StatusError{Code: 404, Reason: "Not found"})
 		return
 	}
 
@@ -113,7 +112,7 @@ func (ur *UserRouter) GetUser(w http.ResponseWriter, r *http.Request) {
 func (ur *UserRouter) GetUsers(w http.ResponseWriter, r *http.Request) {
 	users, err := ur.userService.GetUsers()
 	if err != nil {
-		Error(w, 404, "Not Found")
+		StatusError(w, err)
 		return
 	}
 
@@ -142,8 +141,7 @@ func (ur *UserRouter) CreateUser(w http.ResponseWriter, r *http.Request) {
 	}
 	user, err := ur.userService.CreateUser(createUserDtoToUser(&userDto))
 	if err != nil {
-		log.Println(err)
-		Error(w, http.StatusInternalServerError, fmt.Sprintf("Cannot create user: %s", err.Error()))
+		StatusError(w, err)
 		return
 	}
 
@@ -155,12 +153,12 @@ func (ur *UserRouter) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	username := params["username"]
 	_, err := ur.userService.GetUserByUsername(username)
 	if err != nil {
-		Error(w, 404, "Not Found")
+		StatusError(w, &model.StatusError{Code: 404, Reason: "Not found"})
 		return
 	}
 	err = ur.userService.DeleteUser(username)
 	if err != nil {
-		Error(w, http.StatusInternalServerError, fmt.Sprintf("Cannot create user: %s", err.Error()))
+		StatusError(w, &model.StatusError{Code: 500, Reason: "Cannot delete user"})
 	}
 }
 

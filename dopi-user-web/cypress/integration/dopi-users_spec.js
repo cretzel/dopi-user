@@ -36,7 +36,7 @@ describe('Dopi Users', () => {
         cy.get('.new-user')
         cy.get('#username').clear().type(username)
         cy.get('#roles').clear().type("user, bar")
-        cy.get('#password').clear().type("secret")
+        cy.get('#password').clear().type("Secret1/")
         cy.get('#save').click()
 
         cy.get('.user-list')
@@ -58,13 +58,13 @@ describe('Dopi Users', () => {
         cy.get('.new-user')
         cy.get('#username').clear().type(username)
         cy.get('#roles').clear().type("user")
-        cy.get('#password').clear().type("secret")
+        cy.get('#password').clear().type("Secret1/")
         cy.get('#save').click()
 
         cy.visit('http://localhost:8080/users/login')
 
         cy.get('#username').clear().type(username)
-        cy.get('#password').clear().type("secret")
+        cy.get('#password').clear().type("Secret1/")
         cy.get('#login-button').click()
 
         cy.get('.navbar-item.logged-in-user').should('have.text', username)

@@ -3,10 +3,12 @@ package service
 import (
 	"context"
 	"dopi-user/model"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
 	"log"
 	"os"
+	"unicode"
+
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type UserService struct {
@@ -40,6 +42,11 @@ func (u *UserService) CreateAdminUser() {
 }
 
 func (u *UserService) CreateUser(user *model.User) (*model.User, error) {
+	err := u.validatePassword(user.Password)
+	if err != nil {
+		return nil, err
+	}
+
 	passwordCrypted, err := Generate(user.Password)
 	user.Password = passwordCrypted
 	if err != nil {
@@ -52,6 +59,39 @@ func (u *UserService) CreateUser(user *model.User) (*model.User, error) {
 		return user, err
 	}
 	return u.GetUserByUsername(user.Username)
+}
+
+func (u *UserService) validatePassword(s string) error {
+	if s == os.Getenv("ADMIN_PASSWORD") {
+		return nil
+	}
+
+	var (
+		hasMinLen  = false
+		hasUpper   = false
+		hasLower   = false
+		hasNumber  = false
+		hasSpecial = false
+	)
+	if len(s) >= 7 {
+		hasMinLen = true
+	}
+	for _, char := range s {
+		switch {
+		case unicode.IsUpper(char):
+			hasUpper = true
+		case unicode.IsLower(char):
+			hasLower = true
+		case unicode.IsNumber(char):
+			hasNumber = true
+		case unicode.IsPunct(char) || unicode.IsSymbol(char):
+			hasSpecial = true
+		}
+	}
+	if hasMinLen && hasUpper && hasLower && hasNumber && hasSpecial {
+		return nil
+	}
+	return &model.StatusError{Code: 400, Reason: "Invalid password"}
 }
 
 func (u *UserService) DeleteUser(username string) error {

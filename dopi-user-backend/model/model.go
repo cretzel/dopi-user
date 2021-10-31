@@ -14,3 +14,12 @@ type UserService interface {
 	UpdateUser(user *User) (*User, error)
 	DeleteUser(username string) error
 }
+
+type StatusError struct {
+	Code   int
+	Reason string
+}
+
+func (m StatusError) Error() string {
+	return m.Reason
+}

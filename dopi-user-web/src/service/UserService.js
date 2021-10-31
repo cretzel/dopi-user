@@ -71,7 +71,8 @@ class UserService {
         if (response.ok) {
             return await response.json();
         }
-        return Promise.reject("Error creating user")
+        const json = await response.json();
+        return Promise.reject(json.error)
     }
 
     async deleteUser(username) {

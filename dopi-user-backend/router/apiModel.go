@@ -3,6 +3,7 @@ package router
 import (
 	"dopi-user/model"
 	"encoding/json"
+	"log"
 	"net/http"
 	"time"
 )
@@ -63,6 +64,21 @@ func toUserDtos(users []model.User) []UserDto {
 
 func Error(w http.ResponseWriter, code int, message string) {
 	body, _ := json.Marshal(map[string]string{"error": message})
+	w.WriteHeader(code)
+	w.Write(body)
+}
+
+func StatusError(w http.ResponseWriter, err error) {
+	log.Println(err)
+	reason := http.StatusText(http.StatusInternalServerError)
+	code := http.StatusInternalServerError
+
+	switch err.(type) {
+	case *model.StatusError:
+		reason = err.(*model.StatusError).Reason
+		code = err.(*model.StatusError).Code
+	}
+	body, _ := json.Marshal(map[string]string{"error": reason})
 	w.WriteHeader(code)
 	w.Write(body)
 }

@@ -70,8 +70,9 @@ export default {
             router.push({ name: 'UserList'})
             store.setMessage({text: 'User created', type: 'success'});
           })
-          .catch(() => {
-            store.setMessage({text: 'Cannot create user', type: 'danger'});
+          .catch((e) => {
+            console.log(e)
+            store.setMessage({text: e, type: 'danger'});
           });
     }
   }
