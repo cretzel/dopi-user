@@ -25,7 +25,9 @@
           <router-link :to="{ name: 'EditUser', params: { username: item.username }}">{{ item.username }}</router-link>
         </td>
         <td>
-          {{ item.roles }}
+          <span v-for="role in item.roles" :key="role">
+            {{ role }}
+          </span>
         </td>
       </tr>
       </tbody>

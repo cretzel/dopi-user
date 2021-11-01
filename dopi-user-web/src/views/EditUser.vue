@@ -72,10 +72,23 @@ export default {
             store.setMessage({text: 'Cannot get user', type: 'danger'});
           });
     },
+     validate(userDto) {
+      const errors = [];
+      if (userDto.roles.length == 0) {
+        errors.push("Roles is required")
+      }
+      return errors;
+    },
+
     saveUser() {
       let userDto = {
         username: this.user.username,
-        roles: this.user.roles.split(/[,\s]+/)
+        roles: this.user.roles ? this.user.roles.split(/[,\s]+/) : [],
+      }
+      const errors = this.validate(userDto);
+      if (errors.length > 0) {
+        store.setMessage({ texts: errors, type: "danger" });
+        return
       }
       userService.putUser(userDto)
           .then(() => {

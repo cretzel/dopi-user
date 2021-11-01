@@ -38,7 +38,7 @@ export default {
     }
   },
   watch: {
-    text: function () {
+    texts: function () {
       window.setTimeout(() => store.setMessage(null), 5000);
     }
   }

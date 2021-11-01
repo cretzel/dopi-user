@@ -57,6 +57,18 @@ describe('Dopi Users', () => {
 
     })
 
+    it('Should validate new user details', () => {
+        cy.visit('http://localhost:8080/users/new')
+        cy.get('.new-user')
+        cy.get('#username').clear().type('xxx')
+        cy.get('#roles').clear()
+        cy.get('#password').clear()
+        cy.get('#save').click()
+
+        cy.get('.user-list').should("not.exist")
+        cy.get('.message.is-danger').should("exist")
+    })
+
 
     it('New user should login', () => {
         newUser(username, "user");

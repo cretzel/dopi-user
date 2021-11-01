@@ -60,30 +60,32 @@ export default {
     };
   },
   methods: {
-    validate() {
+    validate(userDto) {
       const errors = [];
-      if (!this.user.username) {
+      if (!userDto.username) {
         errors.push("Username is required")
       }
-      if (!this.user.roles) {
+      if (userDto.roles.length == 0) {
         errors.push("Roles is required")
       }
-      if (!this.user.password) {
+      if (!userDto.password) {
         errors.push("Password is required")
       }
       return errors;
     },
+
     saveUser() {
-      const errors = this.validate();
+      let userDto = {
+        username: this.user.username,
+        roles: this.user.roles ? this.user.roles.split(/[,\s]+/) : [],
+        password: this.user.password,
+      };
+           
+      const errors = this.validate(userDto);
       if (errors.length > 0) {
         store.setMessage({ texts: errors, type: "danger" });
         return
       }
-      let userDto = {
-        username: this.user.username,
-        roles: this.user.roles.split(/[,\s]+/),
-        password: this.user.password,
-      };
       userService
         .postUser(userDto)
         .then(() => {
