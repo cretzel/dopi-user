@@ -51,7 +51,6 @@ export default {
     getUsers() {
       userService.getUsers()
           .then(userDtos => {
-            console.log(userDtos);
             this.users = userDtos;
           })
           .catch(() => {
