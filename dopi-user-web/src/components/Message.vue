@@ -1,6 +1,10 @@
 <template>
-  <article class="message" :class="stateType" v-if="text != null && stateVisisble">
-    <div class="message-body">{{ text }}</div>
+  <article class="message" :class="stateType" v-if="texts.length > 0 && stateVisisble">
+    <div class="message-body">
+      <div v-for="text in texts" :key="text">
+      {{ text }}
+      </div>
+    </div>
   </article>
 </template>
 
@@ -18,8 +22,19 @@ export default {
     stateType() {
       return 'is-' + (store.message != null ? store.message.type : 'none');
     },
-    text() {
-      return store.message != null ? store.message.text : null;
+    texts() {
+      const texts = [];
+      if (store.message) {
+        if (store.message.text) {
+          texts.push(store.message.text);
+        }
+        if (store.message.texts) {
+          store.message.texts.forEach(element => {
+            texts.push(element);
+          });
+        }
+      }
+      return texts;
     }
   },
   watch: {

@@ -30,6 +30,10 @@ class Store {
     setMessage(message) {
         this.message = message;
     }
+
+    resetMessages() {
+        this.message = null;
+    }
 }
 
 export default new Store()

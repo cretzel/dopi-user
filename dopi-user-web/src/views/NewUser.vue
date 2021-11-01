@@ -6,6 +6,7 @@
       Enter the details of this user like e-mail, roles, etc.
     </h2>
 
+
     <div v-if="user">
 
       <div class="columns">
@@ -44,37 +45,56 @@
 </template>
 
 <script>
-import userService from '../service/UserService.js'
-import store from '../store/Store.js'
+import userService from "../service/UserService.js";
+import store from "../store/Store.js";
 import router from "@/router";
 
 export default {
-  name: 'NewUser',
+  name: "NewUser",
   data: function () {
     return {
       user: {
         username: "",
-        roles: ""
-      }
-    }
+        roles: "",
+      },
+    };
   },
   methods: {
+    validate() {
+      const errors = [];
+      if (!this.user.username) {
+        errors.push("Username is required")
+      }
+      if (!this.user.roles) {
+        errors.push("Roles is required")
+      }
+      if (!this.user.password) {
+        errors.push("Password is required")
+      }
+      return errors;
+    },
     saveUser() {
+      const errors = this.validate();
+      if (errors.length > 0) {
+        store.setMessage({ texts: errors, type: "danger" });
+        return
+      }
       let userDto = {
         username: this.user.username,
         roles: this.user.roles.split(/[,\s]+/),
-        password: this.user.password
-      }
-      userService.postUser(userDto)
-          .then(() => {
-            router.push({ name: 'UserList'})
-            store.setMessage({text: 'User created', type: 'success'});
-          })
-          .catch((e) => {
-            console.log(e)
-            store.setMessage({text: e, type: 'danger'});
-          });
-    }
-  }
-}
+        password: this.user.password,
+      };
+      userService
+        .postUser(userDto)
+        .then(() => {
+          router.push({ name: "UserList" });
+          store.setMessage({ text: "User created", type: "success" });
+        })
+        .catch((e) => {
+          console.log(e);
+          store.setMessage({ text: e, type: "danger" });
+        });
+    },
+  },
+};
 </script>
