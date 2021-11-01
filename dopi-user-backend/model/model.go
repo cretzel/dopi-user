@@ -1,9 +1,12 @@
 package model
 
+import "time"
+
 type User struct {
-	Username string `bson:"_id"`
-	Roles    []string
-	Password string
+	Username  string `bson:"_id"`
+	Roles     []string
+	Password  string
+	CreatedAt time.Time
 }
 
 type UserService interface {

@@ -10,14 +10,14 @@
           <div class="field">
             <label class="label">Username</label>
             <div class="control">
-              <input class="input" type="text" id="username" v-model="login.username"/>
+              <input class="input" type="text" id="username" v-model="login.username" v-on:keyup.enter="submit"/>
             </div>
           </div>
 
           <div class="field">
             <label class="label">Password</label>
             <div class="control">
-              <input class="input" type="password" id="password" v-model="login.password"/>
+              <input class="input" type="password" id="password" v-model="login.password" v-on:keyup.enter="submit"/>
             </div>
           </div>
 

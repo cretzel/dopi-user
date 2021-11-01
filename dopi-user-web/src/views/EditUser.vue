@@ -21,7 +21,7 @@
           <div class="field">
             <label class="label">Roles</label>
             <div class="control">
-              <input class="input" type="text" id="roles" placeholder="Roles" v-model="user.roles"/>
+              <input class="input" type="text" id="roles" placeholder="Roles" v-model="user.roles" v-on:keyup.enter="saveUser"/>
             </div>
             <p class="help">The roles or permissions a user is assigned (admin, user, ...)</p>
           </div>

@@ -5,10 +5,12 @@ import (
 	"dopi-user/model"
 	"log"
 	"os"
+	"time"
 	"unicode"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type UserService struct {
@@ -56,6 +58,7 @@ func (u *UserService) CreateUser(user *model.User) (*model.User, error) {
 		panic("Could not crypt password")
 	}
 
+	user.CreatedAt = time.Now()
 	_, err = u.collection.InsertOne(context.TODO(), &user)
 	if err != nil {
 		log.Printf("Error creating user: %s", err.Error())
@@ -143,7 +146,7 @@ func (u *UserService) GetUserByUsername(username string) (*model.User, error) {
 
 func (u *UserService) GetUsers() ([]model.User, error) {
 	var users []model.User
-	cursor, err := u.collection.Find(context.TODO(), bson.M{})
+	cursor, err := u.collection.Find(context.TODO(), bson.M{}, options.Find().SetSort(bson.D{{"_id", 1}}))
 	if err != nil {
 		log.Printf("Error getting users: %s", err.Error())
 		return users, err

@@ -9,9 +9,10 @@ import (
 )
 
 type UserDto struct {
-	Id       string   `json:"id,omitempty"`
-	Username string   `json:"username,omitempty"`
-	Roles    []string `json:"roles"`
+	Id        string    `json:"id,omitempty"`
+	Username  string    `json:"username,omitempty"`
+	Roles     []string  `json:"roles"`
+	CreatedAt time.Time `json:"createdAt"`
 }
 
 type CreateUserDto struct {
@@ -34,8 +35,9 @@ type LoginRequest struct {
 
 func toUserDto(user *model.User) *UserDto {
 	return &UserDto{
-		Username: user.Username,
-		Roles:    user.Roles,
+		Username:  user.Username,
+		Roles:     user.Roles,
+		CreatedAt: user.CreatedAt,
 	}
 }
 

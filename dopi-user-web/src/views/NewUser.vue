@@ -15,14 +15,14 @@
           <div class="field">
             <label class="label">Username</label>
             <div class="control">
-              <input class="input" type="text" id="username" placeholder="Username" v-model="user.username"/>
+              <input class="input" type="text" id="username" placeholder="Username" v-model="user.username" v-on:keyup.enter="saveUser"/>
             </div>
           </div>
 
           <div class="field">
             <label class="label">Roles</label>
             <div class="control">
-              <input class="input" type="text" id="roles" placeholder="admin, user" v-model="user.roles"/>
+              <input class="input" type="text" id="roles" placeholder="admin, user" v-model="user.roles" v-on:keyup.enter="saveUser"/>
             </div>
             <p class="help">The roles or permissions a user is assigned (admin, user, ...)</p>
           </div>
@@ -30,7 +30,7 @@
           <div class="field">
             <label class="label">Password</label>
             <div class="control">
-              <input class="input" type="password" id="password" v-model="user.password"/>
+              <input class="input" type="password" id="password" v-model="user.password" v-on:keyup.enter="saveUser"/>
             </div>
           </div>
 
