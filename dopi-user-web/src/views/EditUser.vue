@@ -92,6 +92,7 @@ export default {
       }
       userService.putUser(userDto)
           .then(() => {
+            router.push({ name: "UserList" });
             store.setMessage({text: 'User saved', type: 'success'});
           })
           .catch(() => {
