@@ -42,11 +42,14 @@ func (u *UserService) CreateAdminUser() {
 }
 
 func (u *UserService) CreateUser(user *model.User) (*model.User, error) {
-	err := u.validatePassword(user.Password)
+	err := u.validateUsername(user.Username)
 	if err != nil {
 		return nil, err
 	}
-
+	err = u.validatePassword(user.Password)
+	if err != nil {
+		return nil, err
+	}
 	passwordCrypted, err := Generate(user.Password)
 	user.Password = passwordCrypted
 	if err != nil {
@@ -59,6 +62,26 @@ func (u *UserService) CreateUser(user *model.User) (*model.User, error) {
 		return user, err
 	}
 	return u.GetUserByUsername(user.Username)
+}
+
+func (u *UserService) validateUsername(username string) error {
+	var (
+		isAllowed = true
+		hasMinLen = false
+	)
+	if len(username) >= 3 {
+		hasMinLen = true
+	}
+
+	for _, char := range username {
+		if !unicode.IsLetter(char) && !unicode.IsLower(char) && !unicode.IsNumber(char) && char != '-' {
+			isAllowed = false
+		}
+	}
+	if hasMinLen && isAllowed {
+		return nil
+	}
+	return &model.StatusError{Code: 400, Reason: "Invalid username"}
 }
 
 func (u *UserService) validatePassword(s string) error {
